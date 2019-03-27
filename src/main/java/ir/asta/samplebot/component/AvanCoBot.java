@@ -47,7 +47,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
                         .isBot(update.getMessage().getFrom().getBot())
                         .languageCode(update.getMessage().getFrom().getLanguageCode())
                         .build();
-                user.setId(update.getMessage().getFrom().getId());
+                user.setTelegramId(update.getMessage().getFrom().getId());
                 userService.saveOrUpdate(user);
                 String textMessageUserSave = "save user by id:" + update.getMessage().getFrom().getId()
                         + "and firstName is:" + update.getMessage().getFrom().getFirstName();
@@ -62,6 +62,34 @@ public class AvanCoBot extends TelegramLongPollingBot {
                 }
 
             } else if (text.equals("/stop")) {
+                UserEntity user = userService.findByTelegramId(update.getMessage().getFrom().getId());
+                if (user != null) {
+                    String username = user.getUsername() != null ? user.getUsername() : "no username";
+                    String textMessageFindUser = "find user by id:" + user.getId()
+                            + ", telegram id  is :" + user.getTelegramId()
+                            + ", firstName is: " + user.getFirstName()
+                            + " and username is: " + username;
+                    SendMessage sendMessage = new SendMessage()
+                            .setChatId(chatId)
+                            .setText(textMessageFindUser);
+                    try {
+                        execute(sendMessage);
+                        log.info("Sent message \"{}\" to {}", textMessageFindUser, chatId);
+                    } catch (TelegramApiException e) {
+                        log.error("Failed to send message \"{}\" to {} due to error: {}", textMessageFindUser, chatId, e.getMessage());
+                    }
+                } else {
+                    String textMessageFindUser = "User not found!";
+                    SendMessage sendMessage = new SendMessage()
+                            .setChatId(chatId)
+                            .setText(textMessageFindUser);
+                    try {
+                        execute(sendMessage);
+                        log.info("Sent message \"{}\" to {}", textMessageFindUser, chatId);
+                    } catch (TelegramApiException e) {
+                        log.error("Failed to send message \"{}\" to {} due to error: {}", textMessageFindUser, chatId, e.getMessage());
+                    }
+                }
 
             } else {
                 // Unknown command
