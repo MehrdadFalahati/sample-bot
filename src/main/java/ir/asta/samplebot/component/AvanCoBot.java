@@ -3,6 +3,7 @@ package ir.asta.samplebot.component;
 import ir.asta.samplebot.entities.user.UserEntity;
 import ir.asta.samplebot.service.userservice.UserService;
 import ir.asta.samplebot.util.date.JalaliCalendar;
+import ir.asta.samplebot.util.locale.LocaleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
             switch(text)
             {
                 case "/daysofyear" :
-                    daysOfYaer(chatId, "A few days of the year: " + calculateDaysOfYear());
+                    daysOfYaer(chatId, LocaleUtil.getText("common_a_few_days_of_the_year") + " " + calculateDaysOfYear());
                     break;
                 case "/start" :
                     addUser(update, chatId);
