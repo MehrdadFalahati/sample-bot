@@ -9,10 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import static java.lang.Math.toIntExact;
 
 @Component
 @Slf4j
@@ -49,11 +56,34 @@ public class AvanCoBot extends TelegramLongPollingBot {
                 case "/stop" :
                     findUser(update, chatId);
                     break;
-                case "/read" :
+                /*case "/read" :
                     readPage(update, chatId);
-                    break;
+                    break;*/
                 default :
                     unkownCommand(chatId);
+            }
+        } else if (update.hasCallbackQuery()) {
+            String callData = update.getCallbackQuery().getData();
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
+            long chatId = update.getCallbackQuery().getMessage().getChatId();
+
+            if (callData.equals("update_read_text")) {
+                UserEntity user = userService.findByTelegramId(toIntExact(chatId));
+                user.setCurrentDays(calculateDaysOfYear());
+                userService.saveOrUpdate(user);
+                int nextPage = 2 * calculateDaysOfYear();
+                int currentPag = nextPage - 1;
+                String answer = LocaleUtil.getText("common_read_text", currentPag, nextPage);
+                EditMessageText newMessage = new EditMessageText()
+                        .setChatId(chatId)
+                        .setMessageId(toIntExact(messageId))
+                        .setText(answer);
+                try {
+                    execute(newMessage);
+                    log.info(SENT_MESSAGE_TO, newMessage, chatId);
+                } catch (TelegramApiException e) {
+                    log.error(FAILED_TO_SEND_MESSAGE_TO_DUE_TO_ERROR, newMessage, chatId, e.getMessage());
+                }
             }
         }
     }
@@ -133,6 +163,15 @@ public class AvanCoBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage()
                 .setChatId(chatId)
                 .setText(textMessageDaysOfYear);
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+        rowInline.add(new InlineKeyboardButton().setText(LocaleUtil.getText("common_read")).setCallbackData("update_read_text"));
+        // Set the keyboard to the markup
+        rowsInline.add(rowInline);
+        // Add it to the message
+        markupInline.setKeyboard(rowsInline);
+        sendMessage.setReplyMarkup(markupInline);
         try {
             execute(sendMessage);
             log.info(SENT_MESSAGE_TO, textMessageDaysOfYear, chatId);
