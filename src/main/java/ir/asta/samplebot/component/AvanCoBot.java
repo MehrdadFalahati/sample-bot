@@ -42,7 +42,12 @@ public class AvanCoBot extends TelegramLongPollingBot {
             switch(text)
             {
                 case "/daysofyear" :
-                    createMessageDyasOfYaer(chatId);
+                    UserEntity user = userService.findByTelegramId(update.getMessage().getFrom().getId());
+                    if (user.getCurrentDays() > calculateDaysOfYear()) {
+                        continuePage(update, chatId);
+                    } else {
+                        createMessageDyasOfYaer(chatId);
+                    }
                     break;
                 case "/start" :
                     addUser(update, chatId);
