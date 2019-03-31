@@ -70,7 +70,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
             if (callData.equals("update_read_text")) {
                 int nextPage = 2 * calculateDaysOfYear();
                 int currentPag = nextPage - 1;
-                UserEntity user = userService.findByTelegramId(toIntExact(chatId));
+                UserEntity user = userService.findByTelegramId(toIntExact(update.getCallbackQuery().getFrom().getId()));
                 if (user.getCurrentDays() != null && user.getCurrentDays() == calculateDaysOfYear()) {
                     EditMessageText newMessage = new EditMessageText()
                             .setChatId(chatId)
