@@ -26,7 +26,7 @@ public class UserEntity extends AbstractBaseEntity implements LogicalDeletable {
     private Boolean isBot;
     private String username;
     private String languageCode;
-    private Integer currentDays = 0;
+    private Integer currentDays = 1;
     private Boolean deleted;
 
     @Override
