@@ -35,7 +35,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
             switch(text)
             {
                 case "/daysofyear" :
-                    daysOfYaer(chatId, LocaleUtil.getText("common_a_few_days_of_the_year") + " " + calculateDaysOfYear());
+                    daysOfYaer(chatId, LocaleUtil.getText("common_a_few_days_of_the_year", calculateDaysOfYear()));
                     break;
                 case "/start" :
                     addUser(update, chatId);
@@ -52,9 +52,9 @@ public class AvanCoBot extends TelegramLongPollingBot {
     private void findUser(Update update, Long chatId) {
         UserEntity user = userService.findByTelegramId(update.getMessage().getFrom().getId());
         if (user != null) {
-            String username = user.getUsername() != null ? user.getUsername() : "no username";
-            String textMessageFindUser = "find user by id:" + user.getId()
-                    + ", telegram id  is :" + user.getTelegramId()
+            String username = user.getUsername() != null ? user.getUsername() : LocaleUtil.getText("common_no_username");
+            String textMessageFindUser = "find user by id: " + user.getId()
+                    + ", telegram id  is: " + user.getTelegramId()
                     + ", firstName is: " + user.getFirstName()
                     + " and username is: " + username;
             SendMessage sendMessage = new SendMessage()
