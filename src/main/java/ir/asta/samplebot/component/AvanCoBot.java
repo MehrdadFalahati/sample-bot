@@ -84,7 +84,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
                     }
                 } else {
                     user.setCurrentDays(calculateDaysOfYear());
-                    userService.saveOrUpdate(user);
+                    UserEntity userEntity = userService.saveOrUpdate(user);
                     String answer = LocaleUtil.getText("common_read_text", currentPag, nextPage);
                     EditMessageText newMessage = new EditMessageText()
                             .setChatId(chatId)
@@ -93,6 +93,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
                     try {
                         execute(newMessage);
                         log.info(SENT_MESSAGE_TO, newMessage, chatId);
+                        log.info("user current day{}",userEntity.getCurrentDays());
                     } catch (TelegramApiException e) {
                         log.error(FAILED_TO_SEND_MESSAGE_TO_DUE_TO_ERROR, newMessage, chatId, e.getMessage());
                     }
