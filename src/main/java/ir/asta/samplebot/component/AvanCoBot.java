@@ -35,7 +35,13 @@ public class AvanCoBot extends TelegramLongPollingBot {
             switch(text)
             {
                 case "/daysofyear" :
-                    daysOfYaer(chatId, LocaleUtil.getText("common_a_few_days_of_the_year", calculateDaysOfYear()));
+                    StringBuilder buffer = new StringBuilder();
+                    int nextPage = 2 * calculateDaysOfYear();
+                    int currentPag = nextPage - 1;
+                    buffer.append(LocaleUtil.getText("common_a_few_days_of_the_year", calculateDaysOfYear(), currentPag, nextPage));
+                    buffer.append("/n");
+                    buffer.append(LocaleUtil.getText("common_link_tanzil", "http://tanzil.net/?locale=fa_IR#"+ currentPag +":1" , "http://tanzil.net/?locale=fa_IR#"+ nextPage +":1"));
+                    daysOfYaer(chatId, LocaleUtil.getText(buffer.toString()));
                     break;
                 case "/start" :
                     addUser(update, chatId);
@@ -43,10 +49,17 @@ public class AvanCoBot extends TelegramLongPollingBot {
                 case "/stop" :
                     findUser(update, chatId);
                     break;
+                case "/read" :
+                    readPage(update, chatId);
+                    break;
                 default :
                     unkownCommand(chatId);
             }
         }
+    }
+
+    private void readPage(Update update, Long chatId) {
+
     }
 
     private void findUser(Update update, Long chatId) {
