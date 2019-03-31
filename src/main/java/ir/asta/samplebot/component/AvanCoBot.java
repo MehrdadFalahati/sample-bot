@@ -213,8 +213,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
         user.setLanguageCode(update.getMessage().getFrom().getLanguageCode());
         user.setTelegramId(update.getMessage().getFrom().getId());
         userService.saveOrUpdate(user);
-        String textMessageUserSave = "save user by id:" + update.getMessage().getFrom().getId()
-                + "and firstName is:" + update.getMessage().getFrom().getFirstName();
+        String textMessageUserSave = LocaleUtil.getText("common_save_user", update.getMessage().getFrom().getFirstName(), "/daysofyear", "/continue");
         SendMessage sendMessage = new SendMessage()
                 .setChatId(chatId)
                 .setText(textMessageUserSave);
