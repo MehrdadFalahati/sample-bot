@@ -205,13 +205,12 @@ public class AvanCoBot extends TelegramLongPollingBot {
     }
 
     private void addUser(Update update, Long chatId) {
-        UserEntity user = UserEntity.builder()
-                .firstName(update.getMessage().getFrom().getFirstName())
-                .lastName(update.getMessage().getFrom().getLastName())
-                .username(update.getMessage().getFrom().getUserName())
-                .isBot(update.getMessage().getFrom().getBot())
-                .languageCode(update.getMessage().getFrom().getLanguageCode())
-                .build();
+        UserEntity user = new  UserEntity();
+        user.setFirstName(update.getMessage().getFrom().getFirstName());
+        user.setLastName(update.getMessage().getFrom().getLastName());
+        user.setUsername(update.getMessage().getFrom().getUserName());
+        user.setIsBot(update.getMessage().getFrom().getBot());
+        user.setLanguageCode(update.getMessage().getFrom().getLanguageCode());
         user.setTelegramId(update.getMessage().getFrom().getId());
         userService.saveOrUpdate(user);
         String textMessageUserSave = "save user by id:" + update.getMessage().getFrom().getId()
