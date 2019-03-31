@@ -23,9 +23,11 @@ public class UserService extends AbstractCrudService<UserEntity, Integer> {
     @Override
     @Transactional
     public UserEntity saveOrUpdate(UserEntity domainObject) {
-        UserEntity user = findByTelegramId(domainObject.getTelegramId());
-        if (user != null) {
-           return super.saveOrUpdate(user);
+        if (domainObject.getId() == null) {
+            UserEntity user = findByTelegramId(domainObject.getTelegramId());
+            if (user != null) {
+                return super.saveOrUpdate(user);
+            }
         }
         return super.saveOrUpdate(domainObject);
     }
