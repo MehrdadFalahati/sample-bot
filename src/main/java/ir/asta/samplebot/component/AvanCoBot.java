@@ -39,7 +39,7 @@ public class AvanCoBot extends TelegramLongPollingBot {
                     int nextPage = 2 * calculateDaysOfYear();
                     int currentPag = nextPage - 1;
                     buffer.append(LocaleUtil.getText("common_a_few_days_of_the_year", calculateDaysOfYear(), currentPag, nextPage));
-                    buffer.append("/n");
+                    buffer.append("\n\n");
                     buffer.append(LocaleUtil.getText("common_link_tanzil", "http://tanzil.net/?locale=fa_IR#"+ currentPag +":1" , "http://tanzil.net/?locale=fa_IR#"+ nextPage +":1"));
                     daysOfYaer(chatId, LocaleUtil.getText(buffer.toString()));
                     break;
