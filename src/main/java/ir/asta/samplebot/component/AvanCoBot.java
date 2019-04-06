@@ -12,7 +12,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
@@ -217,6 +221,18 @@ public class AvanCoBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage()
                 .setChatId(chatId)
                 .setText(textMessageUserSave);
+        ReplyKeyboardMarkup markupInline = new ReplyKeyboardMarkup();
+        /*List<List<KeyboardButton>> rowsInline = new ArrayList<>();*/
+        List<KeyboardRow> rowInline = new ArrayList<>();
+        /*rowInline.add(new KeyboardButton().setText(LocaleUtil.getText("common_read")));
+        // Set the keyboard to the markup
+        rowsInline.add(rowInline);
+        // Add it to the message*/
+        KeyboardRow keyboardButtons = new KeyboardRow();
+        keyboardButtons.add(new KeyboardButton().setText(LocaleUtil.getText("common_read")));
+        rowInline.add(keyboardButtons);
+        markupInline.setKeyboard(rowInline);
+        sendMessage.setReplyMarkup(markupInline);
         try {
             execute(sendMessage);
             log.info(SENT_MESSAGE_TO, textMessageUserSave, chatId);
